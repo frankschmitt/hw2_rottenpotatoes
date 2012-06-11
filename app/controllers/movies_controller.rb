@@ -9,11 +9,8 @@ class MoviesController < ApplicationController
   def index
 #@movies = Movie.all
 #@movies = Movie.all.reorder('title')
-    @movies = Movie.all.sort {|a,b| a.title <=> b.title }
-  end
-
-  def index2 
-    @movies = Movie.all
+#@movies = Movie.all.sort {|a,b| a.title <=> b.title }
+    @movies = Movie.order(params[:sort])
   end
 
   def new
