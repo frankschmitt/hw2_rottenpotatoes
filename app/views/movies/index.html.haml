@@ -4,9 +4,9 @@
 %table#movies
   %thead
     %tr
-      %th= sortable "Movie Title", "title", "title_header"
+      %th{:class => css_class("title")}= sortable("Movie Title", "title", "title_header")
       %th Rating
-      %th= sortable "Release Date", "release_date", "release_date_header"
+      %th{:class => css_class("release_date")}= sortable "Release Date", "release_date", "release_date_header"
       %th More Info
   %tbody
     - @movies.each do |movie|
