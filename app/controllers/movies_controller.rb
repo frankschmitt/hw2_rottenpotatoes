@@ -2,6 +2,11 @@ class MoviesController < ApplicationController
 
   helper_method :sort_column
 
+  def initialize
+    super
+    @all_ratings = Movie.all_ratings
+  end
+
   def show
     id = params[:id] # retrieve movie ID from URI route
     @movie = Movie.find(id) # look up movie by unique ID
@@ -9,10 +14,15 @@ class MoviesController < ApplicationController
   end
 
   def index
-#@movies = Movie.all
-#@movies = Movie.all.reorder('title')
-#@movies = Movie.all.sort {|a,b| a.title <=> b.title }
-    @movies = Movie.order(params[:sort])
+#@movies = Movie.order(params[:sort])
+#flash[:notice] = params[:ratings]
+# we get a hash for params[:ratings], but @all_ratings is an array, therefore we cannot simply use ||=
+    if params[:ratings]
+      selected_ratings = params[:ratings].keys 
+    else
+      selected_ratings = @all_ratings
+    end
+    @movies = Movie.find(:all, :conditions => ["rating IN (?)", selected_ratings], :order => params[:sort])
   end
 
   def new
