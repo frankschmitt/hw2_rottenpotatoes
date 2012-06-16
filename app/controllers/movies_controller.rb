@@ -1,10 +1,11 @@
 class MoviesController < ApplicationController
 
-  helper_method :sort_column
+  helper_method :sort_column, :rating_checked
 
   def initialize
     super
     @all_ratings = Movie.all_ratings
+    @selected_ratings = @all_ratings
   end
 
   def show
@@ -18,11 +19,15 @@ class MoviesController < ApplicationController
 #flash[:notice] = params[:ratings]
 # we get a hash for params[:ratings], but @all_ratings is an array, therefore we cannot simply use ||=
     if params[:ratings]
-      selected_ratings = params[:ratings].keys 
+      @selected_ratings = params[:ratings].keys 
     else
-      selected_ratings = @all_ratings
+      @selected_ratings = @all_ratings
     end
-    @movies = Movie.find(:all, :conditions => ["rating IN (?)", selected_ratings], :order => params[:sort])
+    @movies = Movie.find(:all, :conditions => ["rating IN (?)", @selected_ratings], :order => params[:sort])
+  end
+
+  def rating_checked(rating)
+    @selected_ratings.include?(rating)
   end
 
   def new
