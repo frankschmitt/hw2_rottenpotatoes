@@ -4,7 +4,6 @@ class MoviesController < ApplicationController
   
   attr_reader :selected_ratings
 
-
   def initialize
     super
     @all_ratings = Movie.all_ratings
@@ -18,12 +17,20 @@ class MoviesController < ApplicationController
   end
 
   def index
-#flash[:notice] = params[:ratings]
+#flash[:notice] = session[:sort]
+    # set sort/filter params if not provided by URL
+    params[:sort] ||= session[:sort] 
+    params[:ratings] ||= session[:ratings]
+  
 # we get a hash for params[:ratings], but @all_ratings is an array, therefore we cannot simply use ||=
     if params[:ratings] 
-        @selected_ratings = params[:ratings].keys 
+      @selected_ratings = params[:ratings].keys 
     end
-    flash[:notice] = "selected ratings: #{@selected_ratings}"
+#flash[:notice] = "selected ratings: #{@selected_ratings}"
+    # store current settings for session
+    session[:sort] = params[:sort]
+    session[:ratings] = params[:ratings]
+
     @movies = Movie.find(:all, :conditions => ["rating IN (?)", @selected_ratings], :order => params[:sort])
   end
 
